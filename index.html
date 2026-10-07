@@ -307,7 +307,7 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
 
 <!-- 02 — DEPOL -->
 <section class="chapter" id="depol" data-label="DEPOL Formación">
-  <div class="chapter-bg"><video muted="" loop="" playsinline="" preload="none"><source src="fondo/bg_depol_1080.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;"><source src="fondo/bg_depol_1080.mp4" type="video/mp4"></video></div>
+  <div class="chapter-bg"><video muted="" playsinline="" preload="none" data-start="1"><source src="fondo/bg_depol_1080.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;"><source src="fondo/bg_depol_1080.mp4" type="video/mp4"></video></div>
   <div class="chapter-inner">
     <div class="chapter-head reveal">
       <span class="chapter-num">02</span>
@@ -563,6 +563,15 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
     });
   },{threshold:.05});
   chapters.forEach(c=>bgObs.observe(c));
+
+  /* ---- Background videos with a custom start point (data-start, seconds) ---- */
+  document.querySelectorAll('.chapter-bg video[data-start]').forEach(v=>{
+    const t=parseFloat(v.dataset.start)||0;
+    const seek=()=>{ if(v.currentTime<t) v.currentTime=t; };
+    v.addEventListener('loadedmetadata',seek);
+    v.addEventListener('play',seek);
+    v.addEventListener('ended',()=>{ v.currentTime=t; v.play().catch(()=>{}); });
+  });
 
   if(!reduced){
     let ticking=false;
