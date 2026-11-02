@@ -149,7 +149,7 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 .hero{background:var(--black);justify-content:space-between;padding:6.5rem 3rem 2.6rem;gap:1.4rem;}
 .hero-glow{position:absolute;left:50%;top:44%;width:min(80vw,1100px);aspect-ratio:2/1;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(201,168,76,.09),rgba(201,168,76,.03) 40%,transparent 68%);pointer-events:none;z-index:0;opacity:0;animation:fadeIn 2.4s .4s forwards;}
 .hero-stage{position:relative;z-index:1;flex:1;min-height:58vh;touch-action:pan-y;display:flex;align-items:center;justify-content:center;}
-.hero-screen{position:relative;z-index:50;height:min(60vh,600px);aspect-ratio:3/4;opacity:0;transform:scale(.9);filter:blur(10px);animation:screenIn 1.8s .25s var(--ease-out) forwards;will-change:transform;}
+.hero-screen{position:relative;z-index:50;height:min(56vh,560px);aspect-ratio:1/1;opacity:0;transform:scale(.9);filter:blur(10px);animation:screenIn 1.8s .25s var(--ease-out) forwards;will-change:transform;}
 .hero-screen .monitor-frame{width:100%;height:100%;aspect-ratio:auto;box-shadow:0 50px 100px -30px rgba(0,0,0,.95),0 0 0 1px rgba(201,168,76,.08);transform:perspective(1400px) rotateX(var(--sx,0deg)) rotateY(var(--sy,0deg));}
 .orbit{position:absolute;inset:0;z-index:auto;pointer-events:none;}
 .orbit-item{position:absolute;left:50%;top:50%;width:var(--cw,92px);aspect-ratio:9/16;margin:calc(var(--cw,92px) * -.889) 0 0 calc(var(--cw,92px) * -.5);pointer-events:auto;cursor:none;opacity:0;will-change:transform,opacity;outline:none;}
@@ -168,7 +168,7 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 @media(max-width:900px){
   .hero{padding:6rem 1.4rem 2rem;}
   .hero-stage{min-height:56vh;}
-  .hero-screen{height:auto;width:52vw;}
+  .hero-screen{height:auto;width:58vw;}
   .hero-band{grid-template-columns:1fr;gap:1.2rem;}
   .hero-band .hero-name{white-space:normal;}
 }
@@ -687,7 +687,7 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
       const sw=screen.offsetWidth;
       cw=Math.round(Math.max(56,Math.min(100,sw*.27)));
       const narrow=W<700;
-      rx=narrow?W*.47:Math.min(W*.42-cw*.6,sw*1.2);ry=Math.min(H*.28,rx*(narrow?.8:.42));
+      rx=narrow?W*.5:Math.min(W*.47-cw*.6,sw*1.12);ry=Math.min(H*.28,rx*(narrow?.8:.42));
       items.forEach(el=>el.style.setProperty('--cw',cw+'px'));
     }
     stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;});
