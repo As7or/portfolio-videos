@@ -148,9 +148,9 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 /* ============ HERO v2: centre screen + 3D orbit of covers ============ */
 .hero{background:var(--black);justify-content:space-between;padding:6.5rem 3rem 2.6rem;gap:1.4rem;}
 .hero-glow{position:absolute;left:50%;top:44%;width:min(80vw,1100px);aspect-ratio:2/1;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(201,168,76,.09),rgba(201,168,76,.03) 40%,transparent 68%);pointer-events:none;z-index:0;opacity:0;animation:fadeIn 2.4s .4s forwards;}
-.hero-stage{position:relative;z-index:1;flex:1;min-height:58vh;display:flex;align-items:center;justify-content:center;}
-.hero-screen{position:relative;z-index:50;width:min(44vw,640px,70vh);opacity:0;transform:scale(.9);filter:blur(10px);animation:screenIn 1.8s .25s var(--ease-out) forwards;will-change:transform;}
-.hero-screen .monitor-frame{aspect-ratio:16/9;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(201,168,76,.08);transform:perspective(1400px) rotateX(var(--sx,0deg)) rotateY(var(--sy,0deg));}
+.hero-stage{position:relative;z-index:1;flex:1;min-height:58vh;touch-action:pan-y;display:flex;align-items:center;justify-content:center;}
+.hero-screen{position:relative;z-index:50;height:min(60vh,600px);aspect-ratio:3/4;opacity:0;transform:scale(.9);filter:blur(10px);animation:screenIn 1.8s .25s var(--ease-out) forwards;will-change:transform;}
+.hero-screen .monitor-frame{width:100%;height:100%;aspect-ratio:auto;border:none;padding:0;background:transparent;box-shadow:0 50px 100px -30px rgba(0,0,0,.95);transform:perspective(1400px) rotateX(var(--sx,0deg)) rotateY(var(--sy,0deg));}
 .orbit{position:absolute;inset:0;z-index:auto;pointer-events:none;}
 .orbit-item{position:absolute;left:50%;top:50%;width:var(--cw,92px);aspect-ratio:9/16;margin:calc(var(--cw,92px) * -.889) 0 0 calc(var(--cw,92px) * -.5);pointer-events:auto;cursor:none;opacity:0;will-change:transform,opacity;outline:none;}
 .orbit-item img{width:100%;height:100%;object-fit:cover;display:block;box-shadow:0 18px 40px -18px rgba(0,0,0,.9);transition:outline-color .5s var(--ease-out);outline:1px solid transparent;outline-offset:4px;}
@@ -168,7 +168,7 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 @media(max-width:900px){
   .hero{padding:6rem 1.4rem 2rem;}
   .hero-stage{min-height:56vh;}
-  .hero-screen{width:72vw;}
+  .hero-screen{height:auto;width:52vw;}
   .hero-band{grid-template-columns:1fr;gap:1.2rem;}
   .hero-band .hero-name{white-space:normal;}
 }
@@ -384,8 +384,6 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
     <div class="hero-screen" id="heroScreen">
       <div class="monitor-frame">
         <video src="fondo/bg_hero_web.mp4" autoplay="" muted="" loop="" playsinline=""></video>
-        <div class="monitor-corner tl"></div><div class="monitor-corner tr"></div><div class="monitor-corner bl"></div><div class="monitor-corner br"></div>
-        <div class="monitor-chrome"><span class="rec"><span class="rec-dot"></span>REC</span><span class="monitor-tc" id="monitorTc">00:00:00:00</span></div>
       </div>
     </div>
   </div>
@@ -685,9 +683,9 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
     function measure(){
       W=stage.clientWidth;H=stage.clientHeight;
       const sw=screen.offsetWidth;
-      cw=Math.round(Math.max(56,Math.min(100,sw*.15)));
+      cw=Math.round(Math.max(56,Math.min(100,sw*.27)));
       const narrow=W<700;
-      rx=narrow?W*.5:Math.min(W*.47-cw*.6,sw*.88);ry=Math.min(H*(narrow?.36:.33),rx*(narrow?.95:.34));
+      rx=narrow?W*.52:Math.min(W*.46-cw*.6,sw*1.9);ry=Math.min(H*(narrow?.3:.3),rx*(narrow?.8:.3));
       items.forEach(el=>el.style.setProperty('--cw',cw+'px'));
     }
     stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;});
@@ -698,6 +696,24 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
       el.addEventListener('focus',()=>{hovered=i;el.classList.add('on');});
       el.addEventListener('blur',()=>{hovered=null;el.classList.remove('on');});
     });
+    /* horizontal trackpad swipe or touch drag spins the orbit that way, with momentum */
+    let pend=0,dir=1,tp=null;
+    const nudge=d=>{const R=Math.max(120,rx);pend+=d/R;if(Math.abs(d)>.5)dir=d>0?1:-1;};
+    stage.addEventListener('wheel',e=>{
+      if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;
+      e.preventDefault();nudge(e.deltaX*(e.deltaMode===1?16:1));
+    },{passive:false});
+    stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;tp={x:e.clientX,y:e.clientY,lx:e.clientX,lt:performance.now(),v:0,h:null};});
+    stage.addEventListener('pointermove',e=>{
+      if(!tp)return;
+      if(tp.h===null){const dx=Math.abs(e.clientX-tp.x),dy=Math.abs(e.clientY-tp.y);if(dx+dy>8)tp.h=dx>dy;}
+      if(!tp.h)return;
+      const d=tp.lx-e.clientX,now=performance.now();
+      tp.v=.75*tp.v+.25*(d/Math.max(1,now-tp.lt));tp.lx=e.clientX;tp.lt=now;nudge(d);
+    });
+    const endTouch=()=>{if(tp&&tp.h)nudge(tp.v*240);tp=null;};
+    stage.addEventListener('pointerup',endTouch);stage.addEventListener('pointercancel',endTouch);
+    stage.addEventListener('click',e=>{if(tp===null&&e.target.closest('.orbit-item')&&Math.abs(pend)>.02)e.preventDefault();},true);
     const ease=t=>1-Math.pow(1-t,4);
     let last=performance.now();
     function frame(now){
@@ -706,7 +722,8 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
       const k=ease(Math.max(0,intro));
       cmx+=(mx-cmx)*.05;cmy+=(my-cmy)*.05;
       tSpeed=hovered!==null?.06:1;speed+=(tSpeed-speed)*.035;
-      if(!reduced)angle+=dt*.00011*speed*(1+cmx*.9)+(1-k)*dt*.0012;
+      const step=pend*Math.min(1,dt*.009);pend-=step;angle+=step;
+      if(!reduced)angle+=dir*(dt*.00011*speed*(1+cmx*.9*dir)+(1-k)*dt*.0012);
       const tilt=1+cmy*.9,R=rx*(.55+.45*k);
       screen.style.transform='translate3d('+(cmx*-14).toFixed(2)+'px,'+(cmy*-10).toFixed(2)+'px,0)';
       frameEl.style.setProperty('--sy',(cmx*7).toFixed(2)+'deg');frameEl.style.setProperty('--sx',(cmy*-5).toFixed(2)+'deg');
