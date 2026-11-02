@@ -217,18 +217,40 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 .reels .video-card:hover .video-overlay>*{opacity:1;transform:none;}
 .reels .play-btn{z-index:2;top:42%;}
 /* horizontal sets (Relifiction, ALA): same motion, 12-column layout */
-.video-grid.reels.wide-set{grid-template-columns:repeat(12,1fr);grid-auto-flow:row;grid-auto-columns:auto;gap:1.3rem;}
-.wide-set .video-card{margin-top:0!important;}
-.wide-set .video-card.large{grid-column:span 8;}
-.wide-set .video-card.medium{grid-column:span 6;}
-.wide-set .video-card.small{grid-column:span 4;}
-.wide-set .video-card.centered{grid-column:4 / span 6;}
-.wide-set .video-card:nth-child(odd):not(:first-child){margin-top:2.6rem!important;}
-.wide-set .video-card.tall{aspect-ratio:auto;align-self:stretch;}
-.reels .video-card.tall .video-thumb,.reels .video-card.landscape .video-thumb{position:absolute;inset:0;}
+.reels .video-card.landscape .video-thumb{position:absolute;inset:0;}
 @media(prefers-reduced-motion:reduce){
   .reels .video-card.reveal{clip-path:none;}
   .reels .video-card .video-thumb,.reels .video-card:not(.visible) .video-thumb{transform:none;transition:filter .5s;}
+}
+
+/* ============ CAROUSEL (horizontal sets: Relifiction, ALA) ============ */
+@property --fl{syntax:'<length>';inherits:true;initial-value:0px;}
+@property --fr{syntax:'<length>';inherits:true;initial-value:0px;}
+.carousel-ui{display:none;}
+@media(min-width:901px){
+  .carousel{position:relative;overflow:hidden;margin:-3.4rem calc(50% - 50vw) 0 0;padding:3.4rem 0 2.4rem;--h:clamp(240px,26vw,380px);--fl:0px;--fr:140px;
+    -webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%);
+            mask-image:linear-gradient(to right,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%);
+    transition:--fl .8s var(--ease-out),--fr .8s var(--ease-out);}
+  .carousel.not-start{--fl:90px;}
+  .carousel.at-end,.carousel.static{--fr:0px;}
+  .video-grid.reels.track{display:flex;gap:1.3rem;width:max-content;align-items:flex-start;will-change:transform;user-select:none;-webkit-user-select:none;touch-action:pan-y;}
+  .track .video-card{flex:0 0 auto;height:var(--h);width:calc(var(--h) * (var(--ar)));aspect-ratio:auto;}
+  .track img{-webkit-user-drag:none;pointer-events:none;}
+  .carousel.dragging .video-card{transition:box-shadow .8s var(--ease-out);}
+  .carousel-ui{display:flex;align-items:center;gap:1.8rem;margin-top:.6rem;}
+  .carousel.static+.carousel-ui{display:none;}
+  .carousel-count{font-family:var(--serif);font-size:1rem;color:var(--cream);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:.75rem;min-width:6.5rem;}
+  .c-sep{width:24px;height:1px;background:var(--gold-soft);}
+  .c-tot{color:var(--gray);}
+  .carousel-bar{flex:1;height:1px;background:var(--border);position:relative;overflow:hidden;}
+  .carousel-bar span{position:absolute;inset:0;background:linear-gradient(to right,var(--gold),var(--gold-bright));transform-origin:left center;transform:scaleX(0);}
+  .carousel-nav{display:flex;gap:.65rem;}
+  .carousel-btn{width:48px;height:48px;border-radius:50%;border:1px solid rgba(201,168,76,.35);background:transparent;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:none;transition:background .45s var(--ease-out),color .45s var(--ease-out),border-color .45s var(--ease-out),opacity .45s var(--ease-out),transform .45s var(--ease-out);}
+  .carousel-btn:hover{background:var(--gold);color:var(--black);border-color:var(--gold);transform:scale(1.06);}
+  .carousel-btn:active{transform:scale(.94);}
+  .carousel-btn:disabled{opacity:.22;pointer-events:none;}
+  .carousel-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
 }
 
 /* ============ MODAL ============ */
@@ -270,8 +292,8 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
   .video-grid.reels::-webkit-scrollbar{display:none;}
   .reels .video-card{flex:0 0 62vw;max-width:320px;scroll-snap-align:start;margin-top:0!important;}
   .reels .video-card.landscape{flex-basis:84vw;max-width:520px;align-self:stretch;}
-  .wide-set .video-card{flex:0 0 84vw;max-width:520px;}
-  .wide-set .video-card.tall{flex-basis:62vw;max-width:320px;aspect-ratio:9/16;align-self:flex-start;}
+  .track .video-card{flex:0 0 84vw;max-width:520px;}
+  .track .video-card.tall{flex-basis:62vw;max-width:320px;}
 }
 @media(hover:none){
   .reels .video-overlay{opacity:1;}
@@ -490,33 +512,36 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
       <h2 class="chapter-name">Relifiction</h2>
       <p class="chapter-role"><span data-lang="es">Productora Audiovisual · 2024–2025</span><span data-lang="en">Audiovisual Production · 2024–2025</span></p>
     </div>
-    <div class="video-grid reels wide-set" style="--ar:16/9">
-      <div class="video-card medium centered reveal" data-url="https://youtu.be/8Rz8KlZymrI">
+    <div class="carousel">
+    <div class="video-grid reels track" style="--ar:16/9">
+      <div class="video-card reveal" data-url="https://youtu.be/8Rz8KlZymrI">
         <img class="video-thumb" src="img/rel_sith.jpg" alt="Corto VFX de un Sith para Relifiction, hecho con Blender y After Effects">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">YouTube · Relifiction</div><div class="video-title"><span data-lang="es">Sith · Corto VFX</span><span data-lang="en">Sith · VFX Short</span></div><div class="video-about"><span data-lang="es">Un Sith con sable rojo en un entorno 3D, con toda la postproducción y los efectos hechos a mano.</span><span data-lang="en">A red-lightsaber Sith in a 3D environment, with all post-production and effects done by hand.</span></div><div class="video-desc"><span data-lang="es">Blender + After Effects · 10 s</span><span data-lang="en">Blender + After Effects · 10 s</span></div></div>
       </div>
-      <div class="video-card medium reveal" data-url="https://youtu.be/16pl2lXXzn8">
+      <div class="video-card reveal" data-url="https://youtu.be/16pl2lXXzn8">
         <img class="video-thumb" src="https://img.youtube.com/vi/16pl2lXXzn8/maxresdefault.jpg" onerror="this.src=&#39;https://img.youtube.com/vi/16pl2lXXzn8/hqdefault.jpg&#39;" alt="Vídeo de evento de apertura de hotel">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">YouTube · Relifiction</div><div class="video-title"><span data-lang="es">Evento de inauguración</span><span data-lang="en">Opening Event</span></div><div class="video-about"><span data-lang="es">Vídeo del evento de inauguración del hotel: ambiente, invitados y momentos clave de la noche.</span><span data-lang="en">Film of the hotel's opening event: the atmosphere, the guests and the key moments of the night.</span></div><div class="video-desc"><span data-lang="es">Clip para hotel · 2024</span><span data-lang="en">Hotel Film Clip · 2024</span></div></div>
       </div>
-      <div class="video-card medium reveal" data-url="https://youtu.be/OMM6r1ZygiA">
+      <div class="video-card reveal" data-url="https://youtu.be/OMM6r1ZygiA">
         <img class="video-thumb" src="https://img.youtube.com/vi/OMM6r1ZygiA/maxresdefault.jpg" onerror="this.src=&#39;https://img.youtube.com/vi/OMM6r1ZygiA/hqdefault.jpg&#39;" alt="Vídeo de presentación de hotel">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">YouTube · Relifiction</div><div class="video-title"><span data-lang="es">Presentación de hotel</span><span data-lang="en">Hotel Presentation</span></div><div class="video-about"><span data-lang="es">Pieza de presentación del hotel para su inauguración: espacios, habitaciones y detalles.</span><span data-lang="en">Presentation film of the hotel ahead of its opening: spaces, rooms and details.</span></div><div class="video-desc"><span data-lang="es">Clip para hotel · 2024</span><span data-lang="en">Hotel Film Clip · 2024</span></div></div>
       </div>
-      <div class="video-card medium reveal" data-url="https://www.instagram.com/reel/DCg24euAtap/">
+      <div class="video-card reveal" data-url="https://www.instagram.com/reel/DCg24euAtap/">
         <img class="video-thumb" src="img/rel1.jpg" alt="Contenido de boxeo para Relifiction">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">Instagram · Relifiction</div><div class="video-title"><span data-lang="es">Contenido de boxeo</span><span data-lang="en">Boxing Content</span></div><div class="video-about"><span data-lang="es">Sesión de boxeo en gimnasio: trabajo de saco con luz cálida y cámara muy cercana.</span><span data-lang="en">Boxing session in the gym: heavy-bag work shot close with warm, low light.</span></div><div class="video-desc">Reel · 2024</div></div>
       </div>
-      <div class="video-card medium reveal" data-url="https://www.instagram.com/reel/DA6XRd9AIve/">
+      <div class="video-card reveal" data-url="https://www.instagram.com/reel/DA6XRd9AIve/">
         <img class="video-thumb" src="img/rel2.jpg" alt="Contenido de defensa personal para Relifiction">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">Instagram · Relifiction</div><div class="video-title"><span data-lang="es">Contenido de defensa personal</span><span data-lang="en">Self-Defence Content</span></div><div class="video-about"><span data-lang="es">Clase de defensa personal: guardia y golpeo en planos cortos y con ritmo de montaje.</span><span data-lang="en">Self-defence class: stance and striking in tight shots, cut to the rhythm.</span></div><div class="video-desc">Reel · 2024</div></div>
       </div>
     </div>
+    </div>
+    <div class="carousel-ui"><div class="carousel-count"><span class="c-cur">01</span><span class="c-sep"></span><span class="c-tot">05</span></div><div class="carousel-bar"><span></span></div><div class="carousel-nav"><button class="carousel-btn" data-dir="-1" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="carousel-btn" data-dir="1" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
   </div>
 </section>
 
@@ -530,18 +555,21 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
       <h2 class="chapter-name">American <em>Language Academy</em></h2>
       <p class="chapter-role"><span data-lang="es">Academia de Inglés · 2024</span><span data-lang="en">English Academy · 2024</span></p>
     </div>
-    <div class="video-grid reels wide-set" style="--ar:16/9">
-      <div class="video-card large reveal" data-url="https://youtu.be/brb3XKsrp18">
+    <div class="carousel">
+    <div class="video-grid reels track" style="--ar:16/9">
+      <div class="video-card reveal" data-url="https://youtu.be/brb3XKsrp18">
         <img class="video-thumb" src="https://img.youtube.com/vi/brb3XKsrp18/maxresdefault.jpg" onerror="this.src=&#39;https://img.youtube.com/vi/brb3XKsrp18/hqdefault.jpg&#39;" alt="Tráiler de película subtitulado en inglés para American Language Academy">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">YouTube Shorts · Am. Language</div><div class="video-title"><span data-lang="es">Tráiler subtitulado</span><span data-lang="en">Subtitled Trailer</span></div><div class="video-about"><span data-lang="es">Tráiler de película con subtítulos en inglés. Superó las 450.000 visualizaciones en YouTube Shorts.</span><span data-lang="en">Movie trailer with English subtitles. Passed 450,000 views on YouTube Shorts.</span></div><div class="video-desc"><span data-lang="es">Short · 2024 · 450K visitas</span><span data-lang="en">Short · 2024 · 450K views</span></div></div>
       </div>
-      <div class="video-card small tall reveal" data-url="https://www.instagram.com/reel/C-ArROuiH9y/">
+      <div class="video-card tall reveal" style="--ar:9/16" data-url="https://www.instagram.com/reel/C-ArROuiH9y/">
         <img class="video-thumb" src="img/alagasol.jpg" alt="Vídeo con subtítulos de Pau Gasol" style="object-position:center 20%">
         <div class="play-btn"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></div>
         <div class="video-overlay"><div class="video-platform">Instagram · Am. Language</div><div class="video-title"><span data-lang="es">Pau Gasol · Subtitulado</span><span data-lang="en">Pau Gasol · Subtitles</span></div><div class="video-about"><span data-lang="es">Clip de Pau Gasol subtitulado para aprender inglés con referentes del deporte.</span><span data-lang="en">Pau Gasol clip with subtitles, using sports figures to teach English.</span></div><div class="video-desc">Reel · 2024</div></div>
       </div>
     </div>
+    </div>
+    <div class="carousel-ui"><div class="carousel-count"><span class="c-cur">01</span><span class="c-sep"></span><span class="c-tot">02</span></div><div class="carousel-bar"><span></span></div><div class="carousel-nav"><button class="carousel-btn" data-dir="-1" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="carousel-btn" data-dir="1" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
   </div>
 </section>
 
@@ -621,6 +649,91 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
     });
   },{threshold:.15});
   document.querySelectorAll('.video-grid.reels').forEach(g=>reelObs.observe(g));
+
+  /* ---- Carousels: eased transform, drag with momentum, trackpad, arrows ---- */
+  document.querySelectorAll('.carousel').forEach(car=>{
+    const track=car.querySelector('.track'),cards=[...track.children],ui=car.nextElementSibling;
+    const bar=ui.querySelector('.carousel-bar span'),cur=ui.querySelector('.c-cur'),[prev,next]=ui.querySelectorAll('.carousel-btn');
+    const desk=window.matchMedia('(min-width:901px)');
+    let x=0,tx=0,max=0,raf=null,drag=null,moved=false,vel=0,wheelT=null;
+    const clamp=v=>Math.min(max,Math.max(0,v));
+    const offs=()=>cards.map(c=>c.offsetLeft);
+    const nearest=v=>{const o=offs();let bi=0;o.forEach((p,i)=>{if(Math.abs(p-v)<Math.abs(o[bi]-v))bi=i;});return bi;};
+    const snap=v=>clamp(offs()[nearest(clamp(v))]);
+    function measure(){
+      if(!desk.matches){track.style.transform='';car.classList.remove('static','not-start','at-end');return;}
+      max=Math.max(0,track.scrollWidth-car.clientWidth);
+      car.classList.toggle('static',max<2);tx=clamp(tx);x=clamp(x);kick();
+    }
+    function frame(){
+      const k=reduced?1:(drag?.22:.068);
+      x+=(tx-x)*k; if(Math.abs(tx-x)<.05)x=tx;
+      track.style.transform='translate3d('+(-x).toFixed(2)+'px,0,0)';
+      const vis=Math.min(1,car.clientWidth/track.scrollWidth),p=max?Math.min(1,Math.max(0,x/max)):1;
+      bar.style.transform='scaleX('+(vis+(1-vis)*p).toFixed(4)+')';
+      const idx=x>=max-2?cards.length:nearest(x)+1;
+      cur.textContent=String(idx).padStart(2,'0');
+      prev.disabled=tx<=1;next.disabled=tx>=max-1;
+      car.classList.toggle('not-start',x>4);car.classList.toggle('at-end',x>=max-4);
+      raf=(x!==tx||drag)?requestAnimationFrame(frame):null;
+    }
+    function kick(){if(!raf)raf=requestAnimationFrame(frame);}
+    function go(dir){
+      const o=offs();let i=nearest(tx);
+      if(dir>0){while(i<o.length-1&&o[i]<=tx+2)i++;}else{while(i>0&&o[i]>=tx-2)i--;}
+      tx=clamp(o[i]);kick();
+    }
+    prev.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));
+    car.addEventListener('pointerdown',e=>{
+      if(!desk.matches||max<2||e.pointerType!=='mouse'||e.button!==0)return;
+      drag={sx:e.clientX,st:tx,lx:e.clientX,lt:performance.now()};moved=false;vel=0;kick();
+    });
+    window.addEventListener('pointermove',e=>{
+      if(!drag)return;
+      const dx=e.clientX-drag.sx;if(Math.abs(dx)>5){moved=true;car.classList.add('dragging');}
+      let raw=drag.st-dx;
+      if(raw<0)raw*=.28;else if(raw>max)raw=max+(raw-max)*.28;
+      tx=raw;
+      const now=performance.now(),dt=Math.max(1,now-drag.lt);
+      vel=.8*vel+.2*((drag.lx-e.clientX)/dt);drag.lx=e.clientX;drag.lt=now;
+    });
+    window.addEventListener('pointerup',()=>{
+      if(!drag)return;drag=null;car.classList.remove('dragging');
+      tx=snap(tx+vel*260);kick();
+    });
+    track.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false;}},true);
+    car.addEventListener('wheel',e=>{
+      if(!desk.matches||max<2)return;
+      const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:(e.shiftKey?e.deltaY:0);
+      if(!d)return;e.preventDefault();
+      tx=clamp(tx+d*1.1);kick();
+      clearTimeout(wheelT);wheelT=setTimeout(()=>{tx=snap(tx);kick();},180);
+    },{passive:false});
+    window.addEventListener('resize',measure);desk.addEventListener('change',measure);
+    window.addEventListener('load',measure);measure();
+  });
+
+  /* ---- Reel cards: smooth 3D tilt, inner parallax and cursor light ---- */
+  if(!reduced && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    document.querySelectorAll('.reels .video-card').forEach(card=>{
+      let tx=0,ty=0,tl=0,cx=0,cy=0,cl=0,raf=null;
+      const set=(k,v)=>card.style.setProperty(k,v);
+      function frame(){
+        cx+=(tx-cx)*.085;cy+=(ty-cy)*.085;cl+=(tl-cl)*.07;
+        set('--rx',(-cy*8*cl).toFixed(2)+'deg');set('--ry',(cx*10*cl).toFixed(2)+'deg');
+        set('--lift',(-12*cl).toFixed(2)+'px');
+        if(card.classList.contains('revealed')){set('--px',(-cx*14).toFixed(2)+'px');set('--py',(-cy*14).toFixed(2)+'px');set('--s',(1+.075*cl).toFixed(4));}
+        raf=(Math.abs(tx-cx)+Math.abs(ty-cy)+Math.abs(tl-cl)>.0015)?requestAnimationFrame(frame):null;
+      }
+      const kick=()=>{if(!raf)raf=requestAnimationFrame(frame);};
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+        tx=px-.5;ty=py-.5;set('--mx',(px*100).toFixed(1)+'%');set('--my',(py*100).toFixed(1)+'%');kick();
+      });
+      card.addEventListener('pointerenter',()=>{tl=1;kick();});
+      card.addEventListener('pointerleave',()=>{tx=0;ty=0;tl=0;kick();});
+    });
+  }
   document.querySelectorAll('.reveal').forEach(el=>{if(!el.closest('.reels'))revealObs.observe(el);});
 
   /* ---- Chapter background video play/pause + subtle parallax ---- */
