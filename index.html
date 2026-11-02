@@ -145,6 +145,34 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
   .monitor-frame{aspect-ratio:16/10;}
   .hero-scroll{display:none;}
 }
+/* ============ HERO v2: centre screen + 3D orbit of covers ============ */
+.hero{background:var(--black);justify-content:space-between;padding:6.5rem 3rem 2.6rem;gap:1.4rem;}
+.hero-glow{position:absolute;left:50%;top:44%;width:min(80vw,1100px);aspect-ratio:2/1;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(201,168,76,.09),rgba(201,168,76,.03) 40%,transparent 68%);pointer-events:none;z-index:0;opacity:0;animation:fadeIn 2.4s .4s forwards;}
+.hero-stage{position:relative;z-index:1;flex:1;min-height:58vh;display:flex;align-items:center;justify-content:center;}
+.hero-screen{position:relative;z-index:50;width:min(44vw,640px,70vh);opacity:0;transform:scale(.9);filter:blur(10px);animation:screenIn 1.8s .25s var(--ease-out) forwards;will-change:transform;}
+.hero-screen .monitor-frame{aspect-ratio:16/9;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(201,168,76,.08);transform:perspective(1400px) rotateX(var(--sx,0deg)) rotateY(var(--sy,0deg));}
+.orbit{position:absolute;inset:0;z-index:auto;pointer-events:none;}
+.orbit-item{position:absolute;left:50%;top:50%;width:var(--cw,92px);aspect-ratio:9/16;margin:calc(var(--cw,92px) * -.889) 0 0 calc(var(--cw,92px) * -.5);pointer-events:auto;cursor:none;opacity:0;will-change:transform,opacity;outline:none;}
+.orbit-item img{width:100%;height:100%;object-fit:cover;display:block;box-shadow:0 18px 40px -18px rgba(0,0,0,.9);transition:outline-color .5s var(--ease-out);outline:1px solid transparent;outline-offset:4px;}
+.orbit-item.on img{outline-color:rgba(232,202,126,.75);}
+.orbit-label{position:absolute;left:50%;top:calc(100% + .8rem);transform:translate(-50%,6px);white-space:nowrap;font-size:.55rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-bright);opacity:0;transition:opacity .5s var(--ease-out),transform .6s var(--ease-out);pointer-events:none;}
+.orbit-item.on .orbit-label{opacity:1;transform:translate(-50%,0);}
+.hero-band{position:relative;z-index:60;width:100%;max-width:1360px;margin:0 auto;display:grid;grid-template-columns:1fr minmax(0,460px);gap:3rem;align-items:end;border-top:1px solid var(--border);padding-top:1.8rem;}
+.hero-band .hero-tag{margin-bottom:1rem;}
+.hero-band .hero-name{font-size:clamp(2.6rem,5.2vw,4.8rem);white-space:nowrap;}
+.hero-band .hero-name .line{display:inline-block;vertical-align:bottom;}
+.hero-band .hero-sub{margin-top:0;font-size:.9rem;line-height:1.75;}
+.hero-band .hero-cta{margin-top:1.3rem;}
+@keyframes screenIn{to{opacity:1;transform:scale(1);filter:blur(0)}}
+@keyframes fadeIn{to{opacity:1}}
+@media(max-width:900px){
+  .hero{padding:6rem 1.4rem 2rem;}
+  .hero-stage{min-height:56vh;}
+  .hero-screen{width:72vw;}
+  .hero-band{grid-template-columns:1fr;gap:1.2rem;}
+  .hero-band .hero-name{white-space:normal;}
+}
+@media(prefers-reduced-motion:reduce){.hero-screen{animation:fadeIn .6s forwards;transform:none;filter:none;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scrollPulse{0%,100%{opacity:.35}50%{opacity:1}}
 
@@ -335,30 +363,42 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
 
 <!-- 00 — HERO -->
 <section class="chapter hero" id="hero" data-label="Ástor Entenza">
-  <video class="hero-ambient" src="fondo/bg_hero_web.mp4" autoplay="" muted="" loop="" playsinline="" aria-hidden="true"></video>
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <div class="hero-tag">Video Producer · Editor · Community Manager</div>
-      <h1 class="hero-name"><span class="line"><span class="line-in">Ástor</span></span><span class="line"><span class="line-in">Entenza</span></span></h1>
-      <p class="hero-sub"><span data-lang="es">Ingeniero multimedia especializado en producción y edición de vídeo. Creo contenido audiovisual que potencia marcas, artistas y proyectos — dinámico, emocional y con resultados reales.</span><span data-lang="en">Multimedia engineer specialised in video production and editing. I create audiovisual content that elevates brands, artists and projects — dynamic, emotional and results-driven.</span></p>
-      <a class="hero-cta" href="#depol"><span data-lang="es">Ver trabajos</span><span data-lang="en">See the work</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12l7 7 7-7"></path></svg></a>
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-stage" id="heroStage">
+    <div class="orbit" id="orbit">
+      <a class="orbit-item" href="#depol" aria-label="DEPOL"><img src="img/depol_angel.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">DEPOL</span></a>
+      <a class="orbit-item" href="#macarena" aria-label="Macarena Hoffmann"><img src="img/dj_twinflames.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Macarena Hoffmann</span></a>
+      <a class="orbit-item" href="#manyer" aria-label="Manyer"><img src="img/manyer1.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Manyer</span></a>
+      <a class="orbit-item" href="#relifiction" aria-label="Relifiction"><img src="img/rel_sith.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Relifiction</span></a>
+      <a class="orbit-item" href="#depol" aria-label="DEPOL"><img src="img/depol_exposecurity.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">DEPOL</span></a>
+      <a class="orbit-item" href="#macarena" aria-label="Macarena Hoffmann"><img src="img/dj_upcoming.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Macarena Hoffmann</span></a>
+      <a class="orbit-item" href="#manyer" aria-label="Manyer"><img src="img/manyer3.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Manyer</span></a>
+      <a class="orbit-item" href="#ala" aria-label="American Language Academy"><img src="img/alagasol.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">American Language Academy</span></a>
+      <a class="orbit-item" href="#depol" aria-label="DEPOL"><img src="img/depol1.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">DEPOL</span></a>
+      <a class="orbit-item" href="#manyer" aria-label="Manyer"><img src="img/manyer2.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Manyer</span></a>
+      <a class="orbit-item" href="#relifiction" aria-label="Relifiction"><img src="img/rel1.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Relifiction</span></a>
+      <a class="orbit-item" href="#macarena" aria-label="Macarena Hoffmann"><img src="img/dj_datesjj.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Macarena Hoffmann</span></a>
+      <a class="orbit-item" href="#depol" aria-label="DEPOL"><img src="img/depol3.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">DEPOL</span></a>
+      <a class="orbit-item" href="#manyer" aria-label="Manyer"><img src="img/manyer5.jpg" alt="" loading="eager" decoding="async"><span class="orbit-label">Manyer</span></a>
     </div>
-    <div class="hero-monitor">
+    <div class="hero-screen" id="heroScreen">
       <div class="monitor-frame">
         <video src="fondo/bg_hero_web.mp4" autoplay="" muted="" loop="" playsinline=""></video>
         <div class="monitor-corner tl"></div><div class="monitor-corner tr"></div><div class="monitor-corner bl"></div><div class="monitor-corner br"></div>
-        <div class="monitor-chrome"><span class="rec"><span class="rec-dot"></span>REC</span><span class="monitor-tc" id="monitorTc">00:01:06:01</span></div>
-      </div>
-      <div class="filmstrip">
-        <a class="filmstrip-item" href="#depol"><img src="img/depol1.jpg" alt="Ir al trabajo de DEPOL Formación" loading="lazy"></a>
-        <a class="filmstrip-item" href="#macarena"><img src="img/dj_twinflames.jpg" alt="Ir al trabajo de Macarena Hoffmann" loading="lazy"></a>
-        <a class="filmstrip-item" href="#manyer"><img src="img/manyer1.jpg" alt="Ir al trabajo de Manyer" loading="lazy"></a>
-        <a class="filmstrip-item" href="#relifiction"><img src="img/rel1.jpg" alt="Ir al trabajo de Relifiction" loading="lazy"></a>
-        <a class="filmstrip-item" href="#ala"><img src="img/alagasol.jpg" alt="Ir al trabajo de American Language Academy" loading="lazy"></a>
+        <div class="monitor-chrome"><span class="rec"><span class="rec-dot"></span>REC</span><span class="monitor-tc" id="monitorTc">00:00:00:00</span></div>
       </div>
     </div>
   </div>
-  <div class="hero-scroll"><div class="hero-scroll-line"></div><span data-lang="es">Scroll</span><span data-lang="en">Scroll</span></div>
+  <div class="hero-band">
+    <div class="hero-copy">
+      <div class="hero-tag">Video Producer · Editor · Community Manager</div>
+      <h1 class="hero-name"><span class="line"><span class="line-in">Ástor</span></span> <span class="line"><span class="line-in">Entenza</span></span></h1>
+    </div>
+    <div class="hero-side">
+      <p class="hero-sub"><span data-lang="es">Ingeniero multimedia especializado en producción y edición de vídeo. Creo contenido audiovisual que potencia marcas, artistas y proyectos — dinámico, emocional y con resultados reales.</span><span data-lang="en">Multimedia engineer specialised in video production and editing. I create audiovisual content that elevates brands, artists and projects — dynamic, emotional and results-driven.</span></p>
+      <a class="hero-cta" href="#depol"><span data-lang="es">Ver trabajos</span><span data-lang="en">See the work</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12l7 7 7-7"></path></svg></a>
+    </div>
+  </div>
 </section>
 
 <!-- 01 — MANIFESTO / ABOUT -->
@@ -633,6 +673,61 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
     el.addEventListener('mouseenter',()=>{ring.classList.add('tagged');label.textContent=document.documentElement.classList.contains('lang-en')?'View':'Ver';});
     el.addEventListener('mouseleave',()=>{ring.classList.remove('tagged');});
   });
+
+  /* ---- Hero: covers orbiting the centre screen in 3D ---- */
+  (function(){
+    const stage=document.getElementById('heroStage'),screen=document.getElementById('heroScreen'),frameEl=screen.querySelector('.monitor-frame');
+    const items=[...document.querySelectorAll('#orbit .orbit-item')],N=items.length;
+    const fine=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    let W=0,H=0,rx=0,ry=0,cw=92,angle=0,speed=reduced?0:1,tSpeed=speed,running=true;
+    let mx=0,my=0,cmx=0,cmy=0,intro=reduced?1:0,t0=performance.now(),hovered=null;
+    const hv=items.map(()=>0);
+    function measure(){
+      W=stage.clientWidth;H=stage.clientHeight;
+      const sw=screen.offsetWidth;
+      cw=Math.round(Math.max(56,Math.min(100,sw*.15)));
+      const narrow=W<700;
+      rx=narrow?W*.5:Math.min(W*.47-cw*.6,sw*.88);ry=Math.min(H*(narrow?.36:.33),rx*(narrow?.95:.34));
+      items.forEach(el=>el.style.setProperty('--cw',cw+'px'));
+    }
+    stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;});
+    stage.addEventListener('pointerleave',()=>{mx=0;my=0;});
+    items.forEach((el,i)=>{
+      el.addEventListener('pointerenter',()=>{hovered=i;el.classList.add('on');ring.classList.add('tagged');label.textContent=document.documentElement.classList.contains('lang-en')?'View':'Ver';});
+      el.addEventListener('pointerleave',()=>{if(hovered===i)hovered=null;el.classList.remove('on');ring.classList.remove('tagged');});
+      el.addEventListener('focus',()=>{hovered=i;el.classList.add('on');});
+      el.addEventListener('blur',()=>{hovered=null;el.classList.remove('on');});
+    });
+    const ease=t=>1-Math.pow(1-t,4);
+    let last=performance.now();
+    function frame(now){
+      const dt=Math.min(50,now-last);last=now;
+      if(intro<1)intro=Math.min(1,(now-t0-500)/2200);
+      const k=ease(Math.max(0,intro));
+      cmx+=(mx-cmx)*.05;cmy+=(my-cmy)*.05;
+      tSpeed=hovered!==null?.06:1;speed+=(tSpeed-speed)*.035;
+      if(!reduced)angle+=dt*.00011*speed*(1+cmx*.9)+(1-k)*dt*.0012;
+      const tilt=1+cmy*.9,R=rx*(.55+.45*k);
+      screen.style.transform='translate3d('+(cmx*-14).toFixed(2)+'px,'+(cmy*-10).toFixed(2)+'px,0)';
+      frameEl.style.setProperty('--sy',(cmx*7).toFixed(2)+'deg');frameEl.style.setProperty('--sx',(cmy*-5).toFixed(2)+'deg');
+      for(let i=0;i<N;i++){
+        const th=angle+i/N*Math.PI*2,d=Math.sin(th),x=Math.cos(th)*R,y=d*ry*tilt*k;
+        hv[i]+=((hovered===i?1:0)-hv[i])*.09;
+        const depth=(d+1)/2,sc=(.66+.42*depth)*(1+.28*hv[i]);
+        const a=Math.min(1,Math.max(0,k*1.4-i*.025));
+        const dim=hovered!==null&&hovered!==i?.55:1;
+        const el=items[i];
+        el.style.transform='translate3d('+(x+cmx*26*depth).toFixed(2)+'px,'+(y+cmy*14*depth).toFixed(2)+'px,0) scale('+sc.toFixed(4)+')';
+        el.style.opacity=(a*(.38+.62*depth+.4*hv[i])).toFixed(3);
+        el.style.filter='brightness('+((.42+.58*depth+.5*hv[i])*dim).toFixed(3)+') grayscale('+((1-depth)*.5*(1-hv[i])).toFixed(3)+')';
+        el.style.zIndex=(d>0?60:10)+Math.round(d*20)+(hv[i]>.05?40:0);
+      }
+      if(running)requestAnimationFrame(frame);
+    }
+    new IntersectionObserver(es=>es.forEach(e=>{const was=running;running=e.isIntersecting;if(running&&!was){last=performance.now();requestAnimationFrame(frame);}}),{threshold:0}).observe(stage);
+    window.addEventListener('resize',measure);measure();requestAnimationFrame(frame);
+    if(!fine)items.forEach(el=>el.classList.remove('on'));
+  })();
 
   /* ---- Reveal on scroll ---- */
   document.querySelectorAll('.video-grid.reels').forEach(g=>[...g.children].forEach((c,i)=>c.style.setProperty('--i',i)));
