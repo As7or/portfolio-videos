@@ -163,11 +163,18 @@ nav::after{content:'';position:absolute;inset:0;background:linear-gradient(to bo
 .hero-band .hero-name .line{display:inline-block;vertical-align:bottom;}
 .hero-band .hero-sub{margin-top:0;font-size:.9rem;line-height:1.75;}
 .hero-band .hero-cta{margin-top:1.3rem;}
+/* Clean landing: the orbit fills the first screen, the name block appears on scroll */
+.hero{justify-content:flex-start;padding:0 3rem 7rem;gap:0;}
+.hero-glow{top:50vh;}
+.hero-stage{flex:none;height:100dvh;min-height:0;padding-top:4rem;}
+.hero-band{margin-top:2rem;}
+.hero-band:not(.visible) .hero-tag,.hero-band:not(.visible) .line-in,.hero-band:not(.visible) .hero-sub,.hero-band:not(.visible) .hero-cta{animation-play-state:paused;}
+.hero .hero-scroll{left:50%;right:auto;bottom:1.6rem;transform:translateX(-50%);animation:fadeIn 1s 2s forwards;}
 @keyframes screenIn{to{opacity:1;transform:scale(1);filter:blur(0)}}
 @keyframes fadeIn{to{opacity:1}}
 @media(max-width:900px){
   .hero{padding:6rem 1.4rem 2rem;}
-  .hero-stage{min-height:56vh;}
+  .hero-stage{min-height:0;height:100svh;padding-top:3rem;}
   .hero-screen{height:auto;width:58vw;}
   .hero-band{grid-template-columns:1fr;gap:1.2rem;}
   .hero-band .hero-name{white-space:normal;}
@@ -388,8 +395,9 @@ footer.site-footer{margin-top:6rem;padding-top:2.5rem;border-top:1px solid var(-
         <div class="monitor-chrome"><span class="rec"><span class="rec-dot"></span>REC</span><span class="monitor-tc" id="monitorTc">00:00:00:00</span></div>
       </div>
     </div>
+    <div class="hero-scroll" aria-hidden="true">Scroll<div class="hero-scroll-line"></div></div>
   </div>
-  <div class="hero-band">
+  <div class="hero-band reveal">
     <div class="hero-copy">
       <div class="hero-tag">Video Producer · Editor · Community Manager</div>
       <h1 class="hero-name"><span class="line"><span class="line-in">Ástor</span></span> <span class="line"><span class="line-in">Entenza</span></span></h1>
