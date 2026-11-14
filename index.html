@@ -708,7 +708,7 @@ footer.site-footer>:last-child{text-align:right;}
         const th=(j/PER)*Math.PI*2+r*.42+(rnd()-.5)*.32;
         const size=.72+rnd()*.55;            // irregular scale
         const spd=.45+rnd()*1.1;              // own constant orbit speed
-        const yj=(rnd()-.5)*.2;              // irregular vertical drift
+        const yj=(rnd()-.5)*.3;              // irregular vertical drift
         const zj=(rnd()-.5)*.09;              // irregular radius
         const el=document.createElement('a');
         el.className='cyl-card';el.href=D[s[2]][1];el.setAttribute('aria-label',D[s[2]][0]+' — '+s[4]);
@@ -720,16 +720,16 @@ footer.site-footer>:last-child{text-align:right;}
     let coreS=300,R=400,H0=120,rowGap=1.2,base=-.18;
     function measure(){
       const W=stage.clientWidth,Hs=stage.clientHeight,narrow=W<700;
-      R=narrow?W*.35:Math.min(W*.195,340);
+      R=narrow?W*.4:Math.min(W*.24,400);
       H0=narrow?Math.min(Hs*.115,W*.27):Math.min(Hs*.16,R*.44);
-      rowGap=narrow?.82:.84;
+      rowGap=narrow?1.06:1.1;
       stage.style.perspective=(narrow?1100:2100)+'px';
       coreS=narrow?W*.5:Math.min(Hs*.44,W*.32);core.style.setProperty('--cs',coreS.toFixed(0)+'px');
       cards.forEach(c=>{
         let h=H0*c.size,w=h*c.ratio;
         if(c.ratio>1.2){w=Math.min(w,H0*1.75);h=w/c.ratio*1.15;}
         c.el.style.setProperty('--w',w.toFixed(1)+'px');c.el.style.setProperty('--h',h.toFixed(1)+'px');
-        c.y=((c.row-1)*rowGap+c.yj+(1.1-rowGap))*H0;  // top comes down, base stays
+        c.y=((c.row-1)*rowGap+c.yj)*H0;
       });
     }
     /* input */
