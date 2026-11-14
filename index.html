@@ -721,7 +721,7 @@ footer.site-footer>:last-child{text-align:right;}
     function measure(){
       const W=stage.clientWidth,Hs=stage.clientHeight,narrow=W<700;
       R=narrow?W*.4:Math.min(W*.24,400);
-      H0=narrow?Math.min(Hs*.09,W*.21):Math.min(Hs*.125,R*.34);
+      H0=narrow?Math.min(Hs*.115,W*.27):Math.min(Hs*.16,R*.44);
       rowGap=narrow?1.06:1.1;
       stage.style.perspective=(narrow?1100:2100)+'px';
       coreS=narrow?W*.5:Math.min(Hs*.44,W*.32);core.style.setProperty('--cs',coreS.toFixed(0)+'px');
