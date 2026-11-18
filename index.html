@@ -98,6 +98,10 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.25rem var(--pad);display:grid;
 .meta-bar>:last-child{text-align:right;}
 .chapter-name{font-family:var(--display);font-size:clamp(3rem,8.4vw,8.6rem);font-weight:600;line-height:.88;letter-spacing:-.055em;}
 .chapter-name .soft{font-weight:300;color:rgba(242,236,224,.55);}
+.chapter-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:1.2rem 3.6rem;margin-top:2.6rem;color:rgba(242,236,224,.62);}
+.chapter-stats .stat{margin:0;text-align:center;}
+.chapter-stats .stat b{color:var(--cream);font-size:clamp(1.7rem,2.6vw,2.4rem);margin-bottom:.45rem;}
+@media(max-width:900px){.chapter-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem 1rem;}}
 @media(max-width:900px){.meta-bar{grid-template-columns:1fr 1fr;}.meta-bar>:nth-child(2){display:none;}}
 
 /* ============ MOTION PRIMITIVES ============ */
@@ -415,7 +419,7 @@ footer.site-footer>:last-child{text-align:right;}
           <div class="reveal"><span class="head paren" data-scramble><span data-lang="es">Datos</span><span data-lang="en">Facts</span></span>
             <div class="stat"><b data-count="4" data-suffix="+">4+</b><span data-lang="es">Años editando</span><span data-lang="en">Years editing</span></div>
             <div class="stat"><b data-count="6">6</b><span data-lang="es">Clientes</span><span data-lang="en">Clients</span></div>
-            <div class="stat"><b data-count="450" data-suffix="K">450K</b><span data-lang="es">Visitas en un short</span><span data-lang="en">Views on one short</span></div>
+            <div class="stat"><b data-count="450" data-suffix="K">450K</b><span data-lang="es">Picos de visitas</span><span data-lang="en">Peak views</span></div>
           </div>
         </div>
       </div>
@@ -456,6 +460,7 @@ footer.site-footer>:last-child{text-align:right;}
     <div class="chapter-head">
       <div class="meta-bar mono reveal"><span>(03) <span data-lang="es">Productor y editor de vídeo</span><span data-lang="en">Video producer &amp; editor</span></span><span><span data-lang="es">Academia de oposiciones a Policía</span><span data-lang="en">Police recruitment academy</span></span><span><span data-lang="es">2025 — actualidad</span><span data-lang="en">2025 — present</span></span></div>
       <h2 class="chapter-name mask"><span class="line"><span class="line-in">DEPOL</span></span><span class="line"><span class="line-in soft">Formación</span></span></h2>
+      <div class="chapter-stats mono reveal"><div class="stat"><b data-count="30" data-suffix="K">30K</b><span data-lang="es">Visitas de media</span><span data-lang="en">Average views</span></div><div class="stat"><b data-count="250" data-suffix="K">250K</b><span data-lang="es">Picos de visitas</span><span data-lang="en">Peak views</span></div><div class="stat"><b data-count="45" data-suffix="K">45K</b><span data-lang="es">Seguidores</span><span data-lang="en">Followers</span></div><div class="stat"><b data-count="6" data-suffix="K" data-prefix="+">+6K</b><span data-lang="es">Nuevos en un año</span><span data-lang="en">Growth in one year</span></div></div>
     </div>
     <div class="video-grid reels">
       <div class="video-card reveal" data-url="https://www.instagram.com/reel/Dd_FjHruJZ9/">
@@ -494,6 +499,7 @@ footer.site-footer>:last-child{text-align:right;}
     <div class="chapter-head">
       <div class="meta-bar mono reveal"><span>(04) <span data-lang="es">Editor de vídeo y diseñador gráfico</span><span data-lang="en">Video editor &amp; graphic designer</span></span><span><span data-lang="es">DJ internacional</span><span data-lang="en">International DJ</span></span><span><span data-lang="es">2024 — actualidad</span><span data-lang="en">2024 — present</span></span></div>
       <h2 class="chapter-name mask"><span class="line"><span class="line-in">Macarena</span></span><span class="line"><span class="line-in soft">Hoffmann</span></span></h2>
+      <div class="chapter-stats mono reveal"><div class="stat"><b data-count="110" data-suffix="K">110K</b><span data-lang="es">Seguidores</span><span data-lang="en">Followers</span></div></div>
     </div>
     <div class="video-grid reels" style="--ar:4/5">
       <div class="video-card reveal" data-url="https://www.instagram.com/p/DYchQAZjPqw/">
@@ -822,9 +828,9 @@ footer.site-footer>:last-child{text-align:right;}
   }
   /* ---- Count up ---- */
   function countUp(b){
-    const to=+b.dataset.count,suf=b.dataset.suffix||'';if(reduced){b.textContent=to+suf;return;}
+    const to=+b.dataset.count,suf=b.dataset.suffix||'',pre=b.dataset.prefix||'';if(reduced){b.textContent=pre+to+suf;return;}
     const t0=performance.now(),dur=1600;
-    (function f(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);b.textContent=Math.round(to*e)+suf;if(p<1)requestAnimationFrame(f);})(t0);
+    (function f(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);b.textContent=pre+Math.round(to*e)+suf;if(p<1)requestAnimationFrame(f);})(t0);
   }
 
   /* ---- Reveal on scroll ---- */
